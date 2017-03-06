@@ -1,0 +1,29 @@
+{
+  "name": "souse",
+  "version": "0.1.0",
+  "author": "Gene Diaz <genediazjr@gmail.com> (http://genediazjr.com)",
+  "description": "Drench your server.app with environment variables",
+  "keywords": [
+    "hapi",
+    "plugin",
+    "server.app",
+    "environment variables"
+  ],
+  "license": "MIT",
+  "repository": "git://github.com/genediazjr/souse",
+  "bugs": "https://github.com/genediazjr/souse/issues",
+  "main": "lib/index.js",
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "scripts": {
+    "test": "lab -c -v -L -a code",
+    "test-cover": "lab -c -v -L -a code -r html -o ./coverage.html -L && open ./coverage.html"
+  },
+  "devDependencies": {
+    "coveralls": "2.12.x",
+    "hapi": "16.1.x",
+    "code": "4.0.x",
+    "lab": "12.1.x"
+  }
+}
