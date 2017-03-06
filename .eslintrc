@@ -12,6 +12,7 @@
       2,
       {
         "capIsNewExceptions": [
+          "Rewire"
         ]
       }
     ],
@@ -133,7 +134,6 @@
     "no-unneeded-ternary": 2,
     "no-floating-decimal": 2,
     "no-implicit-coercion": 2,
-    "no-underscore-dangle": 2,
     "no-case-declarations": 2,
     "no-this-before-super": 2,
     "no-use-before-define": 2,
