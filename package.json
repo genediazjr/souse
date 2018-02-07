@@ -14,7 +14,7 @@
   "bugs": "https://github.com/genediazjr/souse/issues",
   "main": "lib/index.js",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.0.0"
   },
   "scripts": {
     "test": "lab -c -v -L -l -a code",
