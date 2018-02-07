@@ -17,8 +17,8 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "test": "lab -c -v -L -a code",
-    "test-cover": "lab -c -v -L -a code -r html -o ./coverage.html -L && open ./coverage.html"
+    "test": "lab -c -v -L -l -a code",
+    "test-cover": "lab -c -v -L -l -a code -r html -o ./coverage.html -L && open ./coverage.html"
   },
   "devDependencies": {
     "coveralls": "3.0.x",
