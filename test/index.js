@@ -17,68 +17,62 @@ describe('registration and functionality', () => {
 
     let server;
 
-    beforeEach((done) => {
+    beforeEach(() => {
 
-        server = new Hapi.Server();
-
-        return done();
+        server = Hapi.server();
     });
 
-    const register = (options, next) => {
+    const register = async (options) => {
 
-        server.register({
-            register: Plugin,
+        await server.register({
+            plugin: Plugin,
             options: options
-        }, (err) => {
-
-            return next(err);
         });
     };
 
-    it('registers', (done) => {
+    it('registers', async () => {
 
-        register({
-            prefix: 'FOO_VAR_'
-        }, (err) => {
+        try {
+
+            await register({ prefix: 'FOO_VAR_' });
+        }
+        catch (err) {
 
             expect(err).to.not.exist();
-
-            return done();
-        });
+        }
     });
 
-    it('returns error if no option', (done) => {
+    it('returns error if no option', async () => {
 
-        register({}, (err) => {
+        try {
+
+            await register({});
+        }
+        catch (err) {
 
             expect(err).to.exist();
             expect(err.message).to.equal('Missing prefix');
-
-            return done();
-        });
+        }
     });
 
-    it('adds new server.app value', (done) => {
+    it('adds new server.app value', async () => {
 
         Plugin.__set__('process', {
-            env: {
-                FOO_VAR_test1: '{"path":"some.config.stuff","value":"Bazinga!"}'
-            }
+            env: { FOO_VAR_test1: '{"path":"some.config.stuff","value":"Bazinga!"}' }
         });
 
-        register({
-            prefix: 'FOO_VAR_'
-        }, (err) => {
+        try {
+
+            await register({ prefix: 'FOO_VAR_' });
+        }
+        catch (err) {
 
             expect(err).to.not.exist();
             expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-
-            return done();
-        });
+        }
     });
 
-
-    it('adds only matching prefix', (done) => {
+    it('adds only matching prefix', async () => {
 
         Plugin.__set__('process', {
             env: {
@@ -87,18 +81,18 @@ describe('registration and functionality', () => {
             }
         });
 
-        register({
-            prefix: 'FOO_VAR_'
-        }, (err) => {
+        try {
+
+            await register({ prefix: 'FOO_VAR_' });
+        }
+        catch (err) {
 
             expect(err).to.not.exist();
             expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-
-            return done();
-        });
+        }
     });
 
-    it('returns error on unparsable value', (done) => {
+    it('returns error on unparsable value', async () => {
 
         Plugin.__set__('process', {
             env: {
@@ -107,18 +101,18 @@ describe('registration and functionality', () => {
             }
         });
 
-        register({
-            prefix: 'FOO_VAR_'
-        }, (err) => {
+        try {
+
+            await register({ prefix: 'FOO_VAR_' });
+        }
+        catch (err) {
 
             expect(err).to.exist();
             expect(err.message).to.equal('Value unparsable: not a stringified object');
-
-            return done();
-        });
+        }
     });
 
-    it('ignores if no value key', (done) => {
+    it('ignores if no value key', async () => {
 
         Plugin.__set__('process', {
             env: {
@@ -127,18 +121,18 @@ describe('registration and functionality', () => {
             }
         });
 
-        register({
-            prefix: 'FOO_VAR_'
-        }, (err) => {
+        try {
+
+            await register({ prefix: 'FOO_VAR_' });
+        }
+        catch (err) {
 
             expect(err).to.not.exist();
             expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-
-            return done();
-        });
+        }
     });
 
-    it('ignores if no path key', (done) => {
+    it('ignores if no path key', async () => {
 
         Plugin.__set__('process', {
             env: {
@@ -147,18 +141,18 @@ describe('registration and functionality', () => {
             }
         });
 
-        register({
-            prefix: 'FOO_VAR_'
-        }, (err) => {
+        try {
+
+            await register({ prefix: 'FOO_VAR_' });
+        }
+        catch (err) {
 
             expect(err).to.not.exist();
             expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-
-            return done();
-        });
+        }
     });
 
-    it('reuses existing objects in the path', (done) => {
+    it('reuses existing objects in the path', async () => {
 
         Plugin.__set__('process', {
             env: {
@@ -168,18 +162,18 @@ describe('registration and functionality', () => {
 
         server.app.some = {};
 
-        register({
-            prefix: 'FOO_VAR_'
-        }, (err) => {
+        try {
+
+            await register({ prefix: 'FOO_VAR_' });
+        }
+        catch (err) {
 
             expect(err).to.not.exist();
             expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-
-            return done();
-        });
+        }
     });
 
-    it('overwrites existing value', (done) => {
+    it('overwrites existing value', async () => {
 
         Plugin.__set__('process', {
             env: {
@@ -190,14 +184,14 @@ describe('registration and functionality', () => {
         server.app.some = { config: { stuff: 'Spock!' } };
         expect(server.app).to.equal({ some: { config: { stuff: 'Spock!' } } });
 
-        register({
-            prefix: 'FOO_VAR_'
-        }, (err) => {
+        try {
+
+            await register({ prefix: 'FOO_VAR_' });
+        }
+        catch (err) {
 
             expect(err).to.not.exist();
             expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-
-            return done();
-        });
+        }
     });
 });
