@@ -32,31 +32,12 @@ describe('registration and functionality', () => {
 
     it('registers', async () => {
 
-        try {
 
-            await register({ prefix: 'FOO_VAR_' });
-        }
-        catch (err) {
-
-            expect(err).to.not.exist();
-        }
     });
 
     it('returns error if no option', async () => {
 
-        let err;
-
-        try {
-
-            await register({});
-        }
-        catch (ex) {
-
-            err = ex;
-        }
-
-        expect(err).to.exist();
-        expect(err.message).to.equal('Missing prefix');
+        await expect(register({})).to.reject('Missing prefix');
     });
 
     it('adds new server.app value', async () => {
@@ -65,15 +46,9 @@ describe('registration and functionality', () => {
             env: { FOO_VAR_test1: '{"path":"some.config.stuff","value":"Bazinga!"}' }
         });
 
-        try {
+        await expect(register({ prefix: 'FOO_VAR_' })).to.not.reject();
 
-            await register({ prefix: 'FOO_VAR_' });
-        }
-        catch (err) {
-
-            expect(err).to.not.exist();
-            expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-        }
+        expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
     });
 
     it('adds only matching prefix', async () => {
@@ -85,20 +60,12 @@ describe('registration and functionality', () => {
             }
         });
 
-        try {
+        await expect(register({ prefix: 'FOO_VAR_' })).to.not.reject();
 
-            await register({ prefix: 'FOO_VAR_' });
-        }
-        catch (err) {
-
-            expect(err).to.not.exist();
-            expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-        }
+        expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
     });
 
     it('returns error on unparsable value', async () => {
-
-        let err;
 
         Plugin.__set__('process', {
             env: {
@@ -107,17 +74,7 @@ describe('registration and functionality', () => {
             }
         });
 
-        try {
-
-            await register({ prefix: 'FOO_VAR_' });
-        }
-        catch (ex) {
-
-            err = ex;
-        }
-
-        expect(err).to.exist();
-        expect(err.message).to.equal('Value unparsable: not a stringified object');
+        await expect(register({ prefix: 'FOO_VAR_' })).to.reject('Value unparsable: not a stringified object');
     });
 
     it('ignores if no value key', async () => {
@@ -129,15 +86,9 @@ describe('registration and functionality', () => {
             }
         });
 
-        try {
+        await expect(register({ prefix: 'FOO_VAR_' })).to.not.reject();
 
-            await register({ prefix: 'FOO_VAR_' });
-        }
-        catch (err) {
-
-            expect(err).to.not.exist();
-            expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-        }
+        expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
     });
 
     it('ignores if no path key', async () => {
@@ -149,15 +100,9 @@ describe('registration and functionality', () => {
             }
         });
 
-        try {
+        await expect(register({ prefix: 'FOO_VAR_' })).to.not.reject();
 
-            await register({ prefix: 'FOO_VAR_' });
-        }
-        catch (err) {
-
-            expect(err).to.not.exist();
-            expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-        }
+        expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
     });
 
     it('reuses existing objects in the path', async () => {
@@ -170,15 +115,9 @@ describe('registration and functionality', () => {
 
         server.app.some = {};
 
-        try {
+        await expect(register({ prefix: 'FOO_VAR_' })).to.not.reject();
 
-            await register({ prefix: 'FOO_VAR_' });
-        }
-        catch (err) {
-
-            expect(err).to.not.exist();
-            expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-        }
+        expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
     });
 
     it('overwrites existing value', async () => {
@@ -190,16 +129,11 @@ describe('registration and functionality', () => {
         });
 
         server.app.some = { config: { stuff: 'Spock!' } };
+
         expect(server.app).to.equal({ some: { config: { stuff: 'Spock!' } } });
 
-        try {
+        await expect(register({ prefix: 'FOO_VAR_' })).to.not.reject();
 
-            await register({ prefix: 'FOO_VAR_' });
-        }
-        catch (err) {
-
-            expect(err).to.not.exist();
-            expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
-        }
+        expect(server.app).to.equal({ some: { config: { stuff: 'Bazinga!' } } });
     });
 });
