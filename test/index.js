@@ -44,15 +44,19 @@ describe('registration and functionality', () => {
 
     it('returns error if no option', async () => {
 
+        let err;
+
         try {
 
             await register({});
         }
-        catch (err) {
+        catch (ex) {
 
-            expect(err).to.exist();
-            expect(err.message).to.equal('Missing prefix');
+            err = ex;
         }
+
+        expect(err).to.exist();
+        expect(err.message).to.equal('Missing prefix');
     });
 
     it('adds new server.app value', async () => {
@@ -94,6 +98,8 @@ describe('registration and functionality', () => {
 
     it('returns error on unparsable value', async () => {
 
+        let err;
+
         Plugin.__set__('process', {
             env: {
                 FOO_VAR_test1: '{"path":"some.config.stuff","value":"Bazinga!"}',
@@ -105,11 +111,13 @@ describe('registration and functionality', () => {
 
             await register({ prefix: 'FOO_VAR_' });
         }
-        catch (err) {
+        catch (ex) {
 
-            expect(err).to.exist();
-            expect(err.message).to.equal('Value unparsable: not a stringified object');
+            err = ex;
         }
+
+        expect(err).to.exist();
+        expect(err.message).to.equal('Value unparsable: not a stringified object');
     });
 
     it('ignores if no value key', async () => {
